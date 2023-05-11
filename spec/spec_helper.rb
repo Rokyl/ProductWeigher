@@ -93,4 +93,11 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  def login_user
+    before(:each) do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      user = FactoryBot.create(:user)
+      sign_in user
+    end
+  end
 end
