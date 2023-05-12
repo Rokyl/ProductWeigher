@@ -10,9 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_11_133921) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_12_123458) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ingestions", force: :cascade do |t|
+    t.integer "status"
+    t.bigint "portions_id"
+    t.datetime "eated_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "profile_id"
+    t.index ["portions_id"], name: "index_ingestions_on_portions_id"
+  end
+
+  create_table "meals", force: :cascade do |t|
+    t.integer "weigh"
+    t.float "total_kcal"
+    t.float "total_carbohydrates"
+    t.float "total_fat"
+    t.float "total_proteins"
+    t.integer "standard_portion_modifier"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "meals_products", id: false, force: :cascade do |t|
+    t.bigint "meals_id"
+    t.bigint "products_id"
+    t.index ["meals_id"], name: "index_meals_products_on_meals_id"
+    t.index ["products_id"], name: "index_meals_products_on_products_id"
+  end
+
+  create_table "portions", force: :cascade do |t|
+    t.integer "weigh"
+    t.integer "portion_modifier"
+    t.bigint "meal_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "ingestion_id"
+    t.index ["meal_id"], name: "index_portions_on_meal_id"
+  end
 
   create_table "products", force: :cascade do |t|
     t.string "name"
@@ -24,6 +62,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_133921) do
     t.integer "standard_portion_modifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "age"
+    t.integer "weigh"
+    t.integer "sex"
+    t.string "region"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -38,4 +87,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_133921) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "profiles", "users"
 end
