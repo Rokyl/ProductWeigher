@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_12_123458) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_15_130217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,7 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_123458) do
     t.float "total_carbohydrates"
     t.float "total_fat"
     t.float "total_proteins"
-    t.integer "standard_portion_modifier"
+    t.float "standard_portion_modifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -44,7 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_123458) do
 
   create_table "portions", force: :cascade do |t|
     t.integer "weigh"
-    t.integer "portion_modifier"
+    t.float "portion_modifier"
     t.bigint "meal_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -56,10 +56,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_123458) do
     t.string "name"
     t.integer "barcode"
     t.integer "kcal"
-    t.integer "protein"
-    t.integer "fat"
-    t.integer "carbohydrates"
-    t.integer "standard_portion_modifier"
+    t.float "protein"
+    t.float "fat"
+    t.float "carbohydrates"
+    t.float "standard_portion_modifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
