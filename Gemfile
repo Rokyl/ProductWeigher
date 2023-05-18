@@ -29,6 +29,9 @@ gem "jbuilder"
 
 gem 'devise'
 gem 'dry-monads'
+gem "bootstrap-sass"
+gem 'jquery-rails'
+gem 'sassc-rails'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
