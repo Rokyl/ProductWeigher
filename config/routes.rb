@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   resources :products, only: [:new, :create, :index]
   resources :meals
   resources :users, except: [:index, :destroy]
-  resources :profiles, only: [:create, :edit, :new, :show]
+  resources :profiles, only: [:create, :edit, :new, :show, :update]
 end
