@@ -1,7 +1,5 @@
-require 'dry/monads'
-class CalculateStandards
+class CalculateStandards < ApplicationService
   MODIFIERS = {1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9}.freeze
-  include Dry::Monads[:result]
 
   def initialize(id)
     @profile = profile_find(id)
