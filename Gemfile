@@ -32,6 +32,8 @@ gem 'dry-monads'
 gem "bootstrap-sass"
 gem 'jquery-rails'
 gem 'sassc-rails'
+gem 'simple_form'
+gem 'country_select'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
