@@ -1,7 +1,7 @@
 class ApplicationService
   include Dry::Monads[:result]
 
-  def self.call(*args, &block)
-    new(*args,&block).call
+  def self.call(...)
+    new(...).call
   end
 end

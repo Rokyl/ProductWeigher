@@ -1,9 +1,8 @@
 class CalculateStandards < ApplicationService
-  MODIFIERS = {1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9}.freeze
+  MODIFIERS = { 1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9 }.freeze
 
-  def initialize(id)
-    @profile = profile_find(id)
-    return nil unless @profile
+  def initialize(profile)
+    @profile = profile
     @age = @profile.age
     @sex = @profile.sex
     @weight = @profile.weigh
@@ -23,10 +22,6 @@ class CalculateStandards < ApplicationService
   end
 
   private
-
-  def profile_find(profile_id)
-    Profile.find_by(id: profile_id)
-  end
 
   def mans_metabolic_rate
     (88.36 + (13.4 * @weight) + (4.8 * @height) - (5.7 * @age)) * @activity_multiplier
