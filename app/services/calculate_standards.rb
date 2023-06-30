@@ -1,6 +1,8 @@
 class CalculateStandards < ApplicationService
   MODIFIERS = { 1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9 }.freeze
 
+  attr_reader age, sex, weight, height, activity
+
   def initialize(profile)
     @profile = profile
     @age = @profile.age
@@ -11,8 +13,7 @@ class CalculateStandards < ApplicationService
   end
 
   def call
-    return Failure(:profile_not_found) unless @profile
-    if @sex==1
+    if @sex == 1
       @profile.update(BMR: mans_metabolic_rate.round)
       Success(@profile)
     else
@@ -22,7 +23,6 @@ class CalculateStandards < ApplicationService
   end
 
   private
-
   def mans_metabolic_rate
     (88.36 + (13.4 * @weight) + (4.8 * @height) - (5.7 * @age)) * @activity_multiplier
   end

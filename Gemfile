@@ -33,7 +33,6 @@ gem 'bootstrap-sass'
 gem 'country_select'
 gem 'devise'
 gem 'dry-monads'
-gem 'jquery-rails'
 gem 'rubocop', require: false
 gem 'sassc-rails'
 gem 'simple_form'
