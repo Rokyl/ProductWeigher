@@ -1,33 +1,28 @@
 class CalculateStandards < ApplicationService
+  MANS_METABOLIC_MULTI = { common: 88.36, weight: 13.4, height: 4.8, age: 5.7 }
+  WOMANS_METABOLIC_MULTI = { common: 447.6, weight: 9.2, height: 3.1, age: 4.3 }
   MODIFIERS = { 1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9 }.freeze
 
-  attr_reader age, sex, weight, height, activity
+  attr_reader :age, :sex, :weight, :height, :activity
 
   def initialize(profile)
     @profile = profile
-    @age = @profile.age
-    @sex = @profile.sex
-    @weight = @profile.weigh
-    @height = @profile.height
-    @activity_multiplier = MODIFIERS[@profile.activity]
+    age = @profile.age
+    sex = @profile.sex
+    weight = @profile.weigh
+    height = @profile.height
+    activity = MODIFIERS[@profile.activity]
   end
 
   def call
-    if @sex == 1
-      @profile.update(BMR: mans_metabolic_rate.round)
-      Success(@profile)
-    else
-      @profile.update(BMR: womens_metabolic_rate.round)
-      Success(@profile)
-    end
+    rates = sex == 1 ? MANS_METABOLIC_MULTI : WOMANS_METABOLIC_MULTI
+    @profile.update(BMR: calculate(rates).round)
+    Success(@profile)
   end
 
   private
-  def mans_metabolic_rate
-    (88.36 + (13.4 * @weight) + (4.8 * @height) - (5.7 * @age)) * @activity_multiplier
+  def calculate(rates)
+    (rates[:common] + (rates[:weight] * weight) + (rates[:height] * height) - (rates[:age] * age)) * activity
   end
 
-  def womens_metabolic_rate
-    (447.6 + (9.2 * @weight) + (3.1 * @height) - (4.3 * @age)) * @activity_multiplier
-  end
 end
