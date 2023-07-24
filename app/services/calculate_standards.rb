@@ -16,22 +16,42 @@ class CalculateStandards < ApplicationService
   end
 
   def call
-    coefficients = sex == 1 ? MALE_METABOLIC_MULTI : FEMALE_METABOLIC_MULTI
     @profile.update(BMR: calculate.round)
     Success(@profile)
   end
 
   private
+
   def male?
     sex == 1
   end
-  
+
   def female?
     sex == 2
   end
+
   def calculate
     coefficients = male? ? MALE_METABOLIC_MULTI : FEMALE_METABOLIC_MULTI
-    (coefficients[:common] + (coefficients[:weight] * weight) + (coefficients[:height] * height) - (coefficients[:age] * age)) * activity
+    (general_sex_coefficient +
+      weight_coefficient +
+      height_coefficient -
+      age_coefficient) *
+      activity
   end
 
+  def general_sex_coefficient
+    coefficients[:common]
+  end
+
+  def weight_coefficient
+    coefficients[:weight] * weight
+  end
+
+  def height_coefficient
+    coefficients[:height] * height
+  end
+
+  def age_coefficient
+    coefficients[:age] * age
+  end
 end
