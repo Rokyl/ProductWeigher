@@ -1,40 +1,61 @@
-require 'dry/monads'
-class CalculateStandards
-  MODIFIERS = {1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9}.freeze
-  include Dry::Monads[:result]
+# frozen_string_literal: true
 
-  def initialize(id)
-    @profile = profile_find(id)
-    return nil unless @profile
+class CalculateStandards < ApplicationService
+  MALE_METABOLIC_MULTI = { common: 88.36, weight: 13.4, height: 4.8, age: 5.7 }.freeze
+  FEMALE_METABOLIC_MULTI = { common: 447.6, weight: 9.2, height: 3.1, age: 4.3 }.freeze
+  MODIFIERS = { 1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9 }.freeze
+
+  attr_reader :age, :sex, :weight, :height, :activity
+
+  def initialize(profile)
+    @profile = profile
     @age = @profile.age
     @sex = @profile.sex
     @weight = @profile.weigh
     @height = @profile.height
-    @activity_multiplier = MODIFIERS[@profile.activity]
+    @activity = MODIFIERS[@profile.activity]
   end
 
   def call
-    return Failure(:profile_not_found) unless @profile
-    if @sex==1
-      @profile.update(BMR: mans_metabolic_rate.round)
-      Success(@profile)
-    else
-      @profile.update(BMR: womens_metabolic_rate.round)
-      Success(@profile)
-    end
+    @profile.assign_attributes(BMR: calculate.round)
+    Success(@profile)
   end
 
   private
 
-  def profile_find(profile_id)
-    Profile.find_by(id: profile_id)
+  def male?
+    sex == 1
   end
 
-  def mans_metabolic_rate
-    (88.36 + (13.4 * @weight) + (4.8 * @height) - (5.7 * @age)) * @activity_multiplier
+  def female?
+    sex == 2
   end
 
-  def womens_metabolic_rate
-    (447.6 + (9.2 * @weight) + (3.1 * @height) - (4.3 * @age)) * @activity_multiplier
+  def calculate
+    (general_sex_coefficient +
+      weight_coefficient +
+      height_coefficient -
+      age_coefficient) *
+      activity
+  end
+
+  def coefficients
+    @coefficients ||= male? ? MALE_METABOLIC_MULTI : FEMALE_METABOLIC_MULTI
+  end
+
+  def general_sex_coefficient
+    @coefficients[:common]
+  end
+
+  def weight_coefficient
+    @coefficients[:weight] * weight
+  end
+
+  def height_coefficient
+    @coefficients[:height] * height
+  end
+
+  def age_coefficient
+    @coefficients[:age] * age
   end
 end

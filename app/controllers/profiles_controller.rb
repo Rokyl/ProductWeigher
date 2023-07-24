@@ -1,19 +1,27 @@
 class ProfilesController < ApplicationController
-  before_action :get_profile if current_user
+  before_action :authenticate_user!
+
   def show
+    @profile = Profile.find_by(user_id: current_user.id)
+  end
+
+  def new
+    @profile = Profile.new
   end
 
   def create
     @profile = Profile.new(profile_params)
     if @profile.save
-      redirect_to @profile
+      redirect_to root
     end
   end
 
   def edit
+    @profile = current_user.profile
   end
 
   def update
+    @profile = current_user.profile
     if @profile.update(profile_params)
       redirect_to @profile
     else
@@ -24,7 +32,7 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:profile).permit!(:user_id, :weigh, :height, :age, :sex, :activity)
+    params.require(:profile).permit(:weigh, :height, :age, :sex, :activity, :region)
   end
 
   def get_profile
