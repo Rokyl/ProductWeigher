@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 class CalculateStandards < ApplicationService
   MALE_METABOLIC_MULTI = { common: 88.36, weight: 13.4, height: 4.8, age: 5.7 }.freeze
   FEMALE_METABOLIC_MULTI = { common: 447.6, weight: 9.2, height: 3.1, age: 4.3 }.freeze
   MODIFIERS = { 1 => 1.2, 2 => 1.375, 3 => 1.725, 4 => 1.9 }.freeze
 
   attr_reader :age, :sex, :weight, :height, :activity
-  attr_accessor :coefficients
 
   def initialize(profile)
     @profile = profile
@@ -31,7 +32,6 @@ class CalculateStandards < ApplicationService
   end
 
   def calculate
-    coefficients = male? ? MALE_METABOLIC_MULTI : FEMALE_METABOLIC_MULTI
     (general_sex_coefficient +
       weight_coefficient +
       height_coefficient -
@@ -39,19 +39,23 @@ class CalculateStandards < ApplicationService
       activity
   end
 
+  def coefficients
+    @coefficients ||= male? ? MALE_METABOLIC_MULTI : FEMALE_METABOLIC_MULTI
+  end
+
   def general_sex_coefficient
-    coefficients[:common]
+    @coefficients[:common]
   end
 
   def weight_coefficient
-    coefficients[:weight] * weight
+    @coefficients[:weight] * weight
   end
 
   def height_coefficient
-    coefficients[:height] * height
+    @coefficients[:height] * height
   end
 
   def age_coefficient
-    coefficients[:age] * age
+    @coefficients[:age] * age
   end
 end
