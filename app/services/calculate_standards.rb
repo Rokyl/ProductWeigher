@@ -17,7 +17,7 @@ class CalculateStandards < ApplicationService
   end
 
   def call
-    @profile.update(BMR: calculate.round)
+    @profile.assign_attributes(BMR: calculate.round)
     Success(@profile)
   end
 
