@@ -1,6 +1,7 @@
 class Meal
   include Mongoid::Document
   include Mongoid::Timestamps
+
   field :weight, type: Float
   field :total_kcal, type: Float
   field :total_carbohydrates, type: Float
