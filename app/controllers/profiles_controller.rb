@@ -12,8 +12,7 @@ class ProfilesController < ApplicationController
   def create
     @profile = Profile.new(profile_params)
     if @profile.save
-      redirect_to root
-    end
+      end
   end
 
   def edit
@@ -32,7 +31,11 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:profile).permit(:weigh, :height, :age, :sex, :activity, :region)
+    permitted_params.merge(user_id: current_user.id)
+  end
+
+  def permitted_params
+    params.require(:profile).permit(:weight, :height, :age, :sex, :activity, :region)
   end
 
   def get_profile

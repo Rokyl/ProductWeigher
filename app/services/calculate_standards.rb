@@ -11,13 +11,13 @@ class CalculateStandards < ApplicationService
     @profile = profile
     @age = @profile.age
     @sex = @profile.sex
-    @weight = @profile.weigh
+    @weight = @profile.weight
     @height = @profile.height
     @activity = MODIFIERS[@profile.activity]
   end
 
   def call
-    @profile.assign_attributes(BMR: calculate.round)
+    @profile.assign_attributes(bmr: calculate.round)
     Success(@profile)
   end
 
@@ -44,18 +44,18 @@ class CalculateStandards < ApplicationService
   end
 
   def general_sex_coefficient
-    @coefficients[:common]
+    coefficients[:common]
   end
 
   def weight_coefficient
-    @coefficients[:weight] * weight
+    coefficients[:weight] * weight
   end
 
   def height_coefficient
-    @coefficients[:height] * height
+    coefficients[:height] * height
   end
 
   def age_coefficient
-    @coefficients[:age] * age
+    coefficients[:age] * age
   end
 end

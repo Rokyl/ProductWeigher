@@ -7,6 +7,8 @@ class Profile
   field :weight, type: Integer
   field :sex, type: Integer
   field :region, type: String
+  field :activity, type: Integer
+  field :bmr, type: Integer, default: 0
 
   belongs_to :user
   has_many :ingestions
